@@ -1,0 +1,5 @@
+python-decouple
+twilio
+boto3
+slack
+slackclient

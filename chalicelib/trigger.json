@@ -1,0 +1,58 @@
+{ 
+	"default": "defaultfield",
+	"twilio_details": 
+		{
+			"from_number":"+18788472160" ,
+			"from_number_whatsapp":"whatsapp:+14155238886" 
+
+		}
+	 ,
+	
+	"patient_details" : 
+		{
+			"patient_name":"yatharth" ,
+			"to_number":"+919783921702" ,
+			"to_number_whatsapp":"whatsapp:+919783921702" ,
+			"patient_email":"pass(int)" ,
+			"patiet_slack":"pass(str)" ,
+            "patient_teams":"pass(str)" , 
+            "patient_preference_for_mode_of_contacting":"pass(5 digit binary)"
+		}
+	 ,
+	"doctor_details" : 
+		{
+			"doctor_name":"Dr.Rajesh" ,
+			"doctor_phone":"pass(int)" ,
+			"doctor_email":"pass(str)" ,
+			"doctor_slack":"pass(str)" ,
+            "doctor_teams":"pass(str)" ,
+            "doctor_availability":"wednesday 9:00-10:00" ,
+            "doctor_sends_message_to_patient":"pass(boolean)"
+			
+		}
+	 ,
+	"appointment_details" :
+
+		{
+			"date":"12/12/2021" ,
+			"time":"10:00 (24 hour format)"
+
+		} , 
+	"channel" :
+	{
+		"sms":"False" ,
+		"whatsapp":"False" ,
+		"voice":"False" ,
+		"slack":"True" 
+	}	,
+	"format" :
+	{
+		"remainder":"False" ,
+		"availability":"False" ,
+		"doc_msg_remainder":"False" ,
+		"appointment_confirmation":"False"  , 
+		"change_in_appointment":"True" 
+
+	}	
+			
+}

@@ -1,0 +1,64 @@
+{
+  "resources": [
+    {
+      "name": "default-role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::550807035378:role/notifications-dev",
+      "role_name": "notifications-dev"
+    },
+    {
+      "name": "Send_SMS",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_SMS"
+    },
+    {
+      "name": "Send_SMS-sns-subscription",
+      "resource_type": "sns_event",
+      "topic": "notifications",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_SMS",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:535db33f-9d80-4364-a39b-ec40833d421e",
+      "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
+    },
+    {
+      "name": "Send_Voice",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Voice"
+    },
+    {
+      "name": "Send_Voice-sns-subscription",
+      "resource_type": "sns_event",
+      "topic": "notifications",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Voice",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:d4de5599-170a-4312-b919-ac5ae8a5b603",
+      "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
+    },
+    {
+      "name": "Send_Slack",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Slack"
+    },
+    {
+      "name": "Send_Slack-sns-subscription",
+      "resource_type": "sns_event",
+      "topic": "notifications",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Slack",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:bcda266c-ecdc-4683-9f7f-e42f8595fafd",
+      "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
+    },
+    {
+      "name": "Send_Whatsapp",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Whatsapp"
+    },
+    {
+      "name": "Send_Whatsapp-sns-subscription",
+      "resource_type": "sns_event",
+      "topic": "notifications",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Whatsapp",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:49e0dfe2-bf24-48de-9ea1-571a762558d3",
+      "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
+    }
+  ],
+  "schema_version": "2.0",
+  "backend": "api"
+}
