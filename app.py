@@ -1,98 +1,69 @@
+# dependency import 
 from chalice import Chalice
+import json
+
+# importing the class from chalicelib
 from chalicelib.sms import sms
 from chalicelib.voice import voice
 from chalicelib.slack_bot import slack_user
 from chalicelib.whatsapp import whatsapp
-import json
+from chalicelib.mongo_code.data.mongo_setup import global_init
 
+
+# initialising the chalice app
 app = Chalice(app_name='notifications')
 app.debug = True
 
-def channelise(info , event , channel , format):
+# def for generalising how and where do we want to send the message , the function takes the class and 
+# the function name as input and executes the task. 
+def channelise(info , event , channel):
     user1 = channel(data = info)
-    format(user1)
+    channel.send_msg(user1)
+
+# def for generalising the conditions applied
+def conditions(channel_json , channel , event) :
+    info = json.loads(event.message)
+    if channel_json in info["channel"]: 
+        channelise(info , event , channel)
+        
+    app.log.debug("Received message with subject: %s, message: %s",
+                  event.subject, event.message)
+
+
 
 @app.on_sns_message(topic='notifications')
 def Send_SMS(event):
-    info = json.loads(event.message)
-    if info["channel"]["sms"] == "True":
-        if info["format"]["remainder"] == "True":
-            channelise(info , event , sms , sms.send_remainder)
-        if info["format"]["availability"] == "True":
-            channelise(info , event , sms , sms.send_availability)
-        if info["format"]["doc_msg_remainder"] == "True":
-            channelise(info , event , sms , sms.send_doc_msg_remainder)
-        if info["format"]["appointment_confirmation"] == "True":
-            channelise(info , event , sms , sms.send_appointment_confirmation)
-        if info["format"]["change_in_appointment"] == "True":
-            channelise(info , event , sms , sms.send_change_in_appointment)
-        else :
-            print("No SMS Format Selected")
-    
-    app.log.debug("Received message with subject: %s, message: %s",
-                  event.subject, event.message)
-
-@app.on_sns_message(topic='notifications')
-def Send_Voice(event):
-    info = json.loads(event.message)
-    if info["channel"]["voice"] == "True":
-        if info["format"]["remainder"] == "True":
-            channelise(info , event , voice , voice.send_remainder)
-        if info["format"]["availability"] == "True":
-            channelise(info , event , voice , voice.send_availability)
-        if info["format"]["doc_msg_remainder"] == "True":
-            channelise(info , event , voice , voice.send_doc_msg_remainder)
-        if info["format"]["appointment_confirmation"] == "True":
-            channelise(info , event , voice , voice.send_appointment_confirmation)
-        if info["format"]["change_in_appointment"] == "True":
-            channelise(info , event , voice , voice.send_change_in_appointment)
-        else :
-            print("No SMS Format Selected")
-    
-    app.log.debug("Received message with subject: %s, message: %s",
-                  event.subject, event.message)
+    conditions(channel_json = "sms" , channel = sms , event = event)
 
 @app.on_sns_message(topic='notifications')
 def Send_Slack(event):
-    info = json.loads(event.message)
-    if info["channel"]["slack"] == "True":
-        if info["format"]["remainder"] == "True":
-            channelise(info , event , slack_user , slack_user.send_remainder)
-        if info["format"]["availability"] == "True":
-            channelise(info , event , slack_user , slack_user.send_availability)
-        if info["format"]["doc_msg_remainder"] == "True":
-            channelise(info , event , slack_user , slack_user.send_doc_msg_remainder)
-        if info["format"]["appointment_confirmation"] == "True":
-            channelise(info , event , slack_user , slack_user.send_appointment_confirmation)
-        if info["format"]["change_in_appointment"] == "True":
-            channelise(info , event , slack_user , slack_user.send_change_in_appointment)
-        else :
-            print("No SMS Format Selected")
-    
-    app.log.debug("Received message with subject: %s, message: %s",
-                  event.subject, event.message)
-
-
+    conditions(channel_json = 'slack' , channel = slack_user , event = event)
 
 @app.on_sns_message(topic='notifications')
-def Send_Whatsapp(event):
-    info = json.loads(event.message)
-    if info["channel"]["whatsapp"] == "True":
-        if info["format"]["remainder"] == "True":
-            channelise(info , event , whatsapp , whatsapp.send_remainder)
-        if info["format"]["availability"] == "True":
-            channelise(info , event , whatsapp , whatsapp.send_availability)
-        if info["format"]["doc_msg_remainder"] == "True":
-            channelise(info , event , whatsapp , whatsapp.send_doc_msg_remainder)
-        if info["format"]["appointment_confirmation"] == "True":
-            channelise(info , event , whatsapp , whatsapp.send_appointment_confirmation)
-        if info["format"]["change_in_appointment"] == "True":
-            channelise(info , event , whatsapp , whatsapp.send_change_in_appointment)
-        else :
-            print("No SMS Format Selected")
+def Send_voice(event):
+    conditions(channel_json = 'voice' , channel = voice , event = event)
     
-    app.log.debug("Received message with subject: %s, message: %s",
-                  event.subject, event.message)
+    
+
+
+# # decorator for initialising the  Send_Voice lambda function with 'notifications' sns topic
+# @app.on_sns_message(topic='notifications')
+# # def for sending the message to user through voice call with conditions provided by trigger.json
+# def Send_Voice(event):
+#     conditions(channel_type = 'voice' , channel_class_name = voice , event = event)
+
+# # decorator for initialising the  Send_slack lambda function with 'notifications' sns topic
+# @app.on_sns_message(topic='notifications')
+# #  def for sending the message to user through slack with conditions provided by trigger.json
+# def Send_Slack(event):
+#     conditions(channel_type = 'slack' , channel_class_name = slack_user , event = event)
+
+
+# # decorator for initialising the  Send_whatsapp lambda function with 'notifications' sns topic
+# @app.on_sns_message(topic='notifications')
+# #  def for sending the message to user through whatsapp with conditions provided by trigger.json
+# def Send_Whatsapp(event):
+#     conditions(channel_type = 'whatsapp' , channel_class_name = whatsapp , event = event)
 
 
 

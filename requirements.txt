@@ -3,3 +3,11 @@ twilio
 boto3
 slack
 slackclient
+pymongo
+mongoengine
+pymongo[srv]
+slack_sdk
+sendgrid
+colorama 
+dnspython 
+argparse

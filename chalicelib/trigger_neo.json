@@ -1,0 +1,20 @@
+{   
+    "inreq":"false" ,
+    "message": "hey yatharth !!!! " ,
+    "uid": "6258f3caef05347f61544868" ,
+    "gid":"None" ,
+    "groupname":"None" ,
+    "channelid" : "6258f41c0ea762bdebe879d0",
+    "active_project": "sikra" ,
+    "active_org_email": "hello" ,
+    "channel": 
+    [
+        "sms" ,
+        "whatsapp",
+        "email",
+        "voice",
+        "slack",
+        "teams" 
+
+    ]
+    }

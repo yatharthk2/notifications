@@ -20,19 +20,6 @@
       "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
     },
     {
-      "name": "Send_Voice",
-      "resource_type": "lambda_function",
-      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Voice"
-    },
-    {
-      "name": "Send_Voice-sns-subscription",
-      "resource_type": "sns_event",
-      "topic": "notifications",
-      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Voice",
-      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:d4de5599-170a-4312-b919-ac5ae8a5b603",
-      "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
-    },
-    {
       "name": "Send_Slack",
       "resource_type": "lambda_function",
       "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Slack"
@@ -42,20 +29,20 @@
       "resource_type": "sns_event",
       "topic": "notifications",
       "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Slack",
-      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:bcda266c-ecdc-4683-9f7f-e42f8595fafd",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:b2af7486-87fa-4dc6-a2f9-eb93eb02e54b",
       "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
     },
     {
-      "name": "Send_Whatsapp",
+      "name": "Send_voice",
       "resource_type": "lambda_function",
-      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Whatsapp"
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_voice"
     },
     {
-      "name": "Send_Whatsapp-sns-subscription",
+      "name": "Send_voice-sns-subscription",
       "resource_type": "sns_event",
       "topic": "notifications",
-      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_Whatsapp",
-      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:49e0dfe2-bf24-48de-9ea1-571a762558d3",
+      "lambda_arn": "arn:aws:lambda:us-east-1:550807035378:function:notifications-dev-Send_voice",
+      "subscription_arn": "arn:aws:sns:us-east-1:550807035378:notifications:799a96ca-403b-47e0-9420-156ff01d5ecf",
       "topic_arn": "arn:aws:sns:us-east-1:550807035378:notifications"
     }
   ],

@@ -1,49 +1,79 @@
 import slack
-import os
-from decouple import config
-import json
+from slack_sdk import WebClient
+from chalicelib.mongo_code.program_support import *
+from chalicelib.mongo_code.data_service import *
+from chalicelib.mongo_code.data.mongo_setup import global_init
 class slack_user :
-    def __init__(self , data) :
-        self.SLACK_TOKEN = config('SLACK_TOKEN')
+    def __init__(self , data ):
+        self.error_flag = 0
         self.event = data
-        self.doctor = self.event["doctor_details"]["doctor_name"]
-        self.patient = self.event["patient_details"]["patient_name"]
-        self.date = self.event["appointment_details"]["date"]
-        self.time = self.event["appointment_details"]["time"]
-        self.doctor_avail = self.event["doctor_details"]["doctor_availability"]
+        if self.event['inreq'] == 'false':
+            # trigger_neo
+            self.message = self.event["message"]
+            self.UID = self.event["uid"]
+            self.active_project = self.event["active_project"]
+            self.channelID = self.event["channelid"]
+            self.GID = self.event["gid"]
+            self.Gname = self.event["groupname"]
+            global_init()
         
-        self.client = slack.WebClient(token=self.SLACK_TOKEN)
+        else :
+            self.channelID = self.event["channelid"]
+            self.message = self.event["message"]
+            self.slack = self.event["slack"]
+            global_init()
 
-    def format_outline(self , sentence) :
-        self.text_msg = sentence
-        self.client.conversations_open(users=["U02QGPKBTPU"])
-        self.client.chat_postMessage(channel='U02QGPKBTPU', text=self.text_msg , as_user=True)
+    def fetch_info(self , uid) :
+        # mongo document user
+        self.user  = find_UID_in_project(self.active_project , uid)
+        self.channel = fetch_channel(self.channelID)
 
-    def send_remainder(self ): 
-        msg = f'Hi {self.patient} , your appointment is scheduled with {self.doctor} for {self.date} at {self.time}'
-        self.format_outline(sentence = msg )
+        self.SLACK_TOKEN = self.channel.slack_api_key
+        self.slackID = self.user.slackid
+        self.client = WebClient(token=self.SLACK_TOKEN)
 
-    def send_availability(self):
-        msg = f'Hi {self.patient} , {self.doctor} is available on {self.doctor_avail}'
-        self.format_outline(sentence = msg )
     
+    def fetch_info_ir(self ):
+        self.channel = fetch_channel(self.channelID)
+        self.SLACK_TOKEN = self.channel.slack_api_key
+        self.slackID = self.slack
+        self.client = WebClient(token=self.SLACK_TOKEN)
 
-    def send_doc_msg_remainder(self):
-        msg = f'Hi {self.patient} , {self.doctor} has sent you a message , pls check your profile'
-        self.format_outline(sentence = msg )
+            
+    def format_outline(self ) :
+        self.fetch_info(self.UID)
+        self.client.conversations_open(users=[self.slackID])
+        self.client.chat_postMessage(channel=self.slackID, text=self.message , as_user=True)
 
-    def send_appointment_confirmation(self):
-        msg = f'Hi {self.patient} , we have confirmed your booking with {self.doctor} on {self.date} at {self.time}'
-        self.format_outline(sentence = msg )
+    def format_outline_GID (self) :
+        group = get_GID_information(self.Gname , self.active_project)
+        for uid in group.uid:
+            self.fetch_info(uid) 
+            self.client.conversations_open(users=[self.slackID])
+            self.client.chat_postMessage(channel=self.slackID, text=self.message , as_user=True)
+    def format_outline_ir(self ) :
+        self.fetch_info_ir()
+        self.client.conversations_open(users=[self.slackID])
+        self.client.chat_postMessage(channel=self.slackID, text=self.message , as_user=True)    
+    def send_msg(self):
+        if self.event['inreq'] == 'false':
+        
+            if self.GID != 'None':
+                print('gid found')
+                self.format_outline_GID()
+            if self.UID != 'None':
+                print('uid found 1')
+                self.format_outline()
+        
+        if(self.event['inreq'] == 'true'): 
+            self.format_outline_ir()
 
-    def send_change_in_appointment(self):
-        msg = f'Hi {self.patient} , we have changed your booking with {self.doctor} ,  updated details are {self.doctor} will consult you on {self.date} at {self.time}'
-        self.format_outline(sentence = msg )
-
-
-
+# for testing the functionality of code without deploying to the server
 if __name__ == '__main__':
     info = json.loads(open('chalicelib/trigger.json').read())
     user1 = slack_user(data = info)
-    user1.send_availability()    
+    user1.send_msg()                
+
+
+
 

@@ -7,12 +7,16 @@ import json
 
 class whatsapp :
     def __init__(self , data ):
+        # details taken from .env file
         self.account = config('TWILIO_ACCOUNT_sid')
         self.token = config('auth_token')
         self.client = Client(self.account, self.token)
         self.from_ = config('from_number_whatsapp')
+
         self.error_flag = 0
         self.event = data
+
+        # details taken from trigger.json
         self.doctor = self.event["doctor_details"]["doctor_name"]
         self.patient = self.event["patient_details"]["patient_name"]
         self.to_number = self.event["patient_details"]["to_number_whatsapp"]
@@ -20,7 +24,7 @@ class whatsapp :
         self.time = self.event["appointment_details"]["time"]
         self.doctor_avail = self.event["doctor_details"]["doctor_availability"]
 
-
+    # def for generalising whatsapp sending code
     def format_outline(self , sentence) :
         self.text_msg = sentence
         try:
@@ -39,6 +43,8 @@ class whatsapp :
                 print("Valid Format but Number Not Found")
         else:
             print('Invalid Format and number not found')
+
+    # def for different msg format:
 
     def send_remainder(self ): 
         msg = f'Hi {self.patient} , your appointment is scheduled with {self.doctor} for {self.date} at {self.time}'
@@ -60,30 +66,13 @@ class whatsapp :
         msg = f'Hi {self.patient} , we have changed your booking with {self.doctor} ,  updated details are {self.doctor} will consult you on {self.date} at {self.time}'
         self.format_outline(sentence = msg )
 
+# for testing the functionality of code without deploying to the server
+
 if __name__ == '__main__':
     info = json.loads(open('chalicelib/trigger.json').read())
     user1 = whatsapp(data = info)
     user1.send_remainder()
 
-
-# import os
-# from twilio.rest import Client
-
-
-# # Find your Account SID and Auth Token at twilio.com/console
-# # and set the environment variables. See http://twil.io/secure
-# account_sid = 'AC597bb4c54d8d3c75d5fab4a5a2297a11'
-# auth_token = 'eb129345de7c57f6be0d6cc8032ad623'
-# client = Client(account_sid, auth_token)
-
-# message = client.messages.create(
-#                               from_='whatsapp:+14155238886',
-#                               body='Hello, there!',
-#                               to='whatsapp:+919783921702'
-#                           )
-
-# print(message.sid)
-    
 
 
             
